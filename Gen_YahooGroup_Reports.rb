@@ -4,7 +4,7 @@ require 'gruff'
 require 'yaml'
 require 'tzinfo'
 
-load 'ClubPCRModerator.rb'
+load 'YahooGroupModerator.rb'
 
 class Graphics_Helper
   
@@ -49,7 +49,7 @@ class Graphics_Helper
   end
   
   
-  def print_response_by_day(title,data)
+  def print_response_by_day(group_name,title,data)
     graph = Gruff::Bar.new
     graph.title = title
     graph.y_axis_label = '% of approved messages'
@@ -67,10 +67,10 @@ class Graphics_Helper
       graph.data(mod.name,arr)
     end
     
-    graph.write('ClubPCR admin response by day-of-week.png')
+    graph.write(group_name + ' admin response by day-of-week.png')
   end
   
-  def print_response_by_hour(title,data)
+  def print_response_by_hour(group_name,title,data)
       graph = Gruff::Bar.new
       graph.title = title
       graph.y_axis_label = '% of approved messages'
@@ -92,7 +92,7 @@ class Graphics_Helper
 	graph.data(mod.name,arr)
       end 
       
-      graph.write('ClubPCR admin response by hour-of-day.png') 
+      graph.write(group_name + ' admin response by hour-of-day.png') 
   end
 
 end
@@ -106,7 +106,7 @@ class Text_Helper
   def print_text_report(title,date,data)
     
     report = File.open(title,'w')
-    report.puts('============ ClubPCR Administration Report ============')
+    report.puts('============ Yahoo Groups Administration Report ============')
     
     report.puts("\n\n")
     report.puts('Reporting Period: ' + date)
@@ -147,10 +147,13 @@ end
 if ARGV.length == 1 
   filename = ARGV[0]
 else
-  filename = 'clubpcr_moderation_stats for 2012-03-16 to 2012-03-23.yaml'
+  filename = 'yahoo_group[ClubPCR]_moderation_stats for 2012-05-01 to 2012-05-08.yaml'
 end
 
 p filename
+
+group_name = filename.slice(/\[(.*)\]/)
+group_name = $1
 
 results =  YAML.load_file(filename) 
 dates = filename.split.slice(2,3).join(' ').gsub('.yaml','')
@@ -158,11 +161,11 @@ dates = filename.split.slice(2,3).join(' ').gsub('.yaml','')
 graphics = Graphics_Helper.new
 graphics.print_total_mesgs_moderated_by_mod('Totals for ' + dates,results)
 graphics.print_response_times('Response times for ' + dates,results)
-graphics.print_response_by_day('Response of admins by day', results)
-graphics.print_response_by_hour('Response of admins by hour', results)
+graphics.print_response_by_day(group_name,'Response of admins by day', results)
+graphics.print_response_by_hour(group_name, 'Response of admins by hour', results)
 
 text = Text_Helper.new
-text.print_text_report('ClubPCR Report ' + dates + '.txt',dates,results)
+text.print_text_report('[' + group_name + ']Yahoo Groups Report' + dates + '.txt',dates,results)
 
 
 
