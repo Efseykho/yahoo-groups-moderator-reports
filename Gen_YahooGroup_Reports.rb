@@ -1,12 +1,10 @@
 #!/usr/bin/ruby
 
-
 require 'yaml'
 require 'tzinfo'
 
 load 'YahooGroupModerator.rb'
 load 'GraphicsHelper.rb'
-
 
 class Text_Helper
   def print_text_report(title,date,data)
@@ -70,12 +68,5 @@ graphics.print_response_times('Response times for ' + dates,results)
 graphics.print_response_by_day(group_name,'Response of admins by day', results)
 graphics.print_response_by_hour(group_name, 'Response of admins by hour', results)
 
-  
-  
 text = Text_Helper.new
 text.print_text_report('[' + group_name + ']Yahoo Groups Report' + dates + '.txt',dates,results)
-
-
-
-
-
